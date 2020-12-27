@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cinemabook/data/core/api_client.dart';
 import 'package:cinemabook/data/repository/movie_repository.dart';
 import 'package:flutter/material.dart';
@@ -11,5 +9,3 @@ void main() {
   movieRepository.getMovies();
   // runApp(MyApp());
 }
-
-

@@ -15,8 +15,11 @@ class MovieRepository extends MovieRemoteDataSource {
   @override
   Future<List<Movie>> getMovies() async {
     final response = await _client.get('trending/movie/day');
-    final movies = MoviesResultModel.fromJson(response).movie;
+    // print(response);
+    // print("======5645======");
+    final movies = MoviesResultModel.fromJson(response).movies;
     print(movies);
+    print("---------56------");
     return movies;
   }
 }
