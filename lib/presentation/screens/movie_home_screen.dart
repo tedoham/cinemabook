@@ -1,3 +1,5 @@
+import 'package:cinemabook/data/core/api_constants.dart';
+import 'package:cinemabook/data/model/all_movie_model.dart';
 import 'package:cinemabook/data/model/movie_model.dart';
 import 'package:cinemabook/data/model/movies_result_model.dart';
 import 'package:cinemabook/logic/bloc/movie_bloc.dart';
@@ -30,19 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
         alignment: Alignment.center,
         child: BlocBuilder<MovieBloc, MovieState>(
           builder: (context, state) {
-            // print("**********7887878***********");
-            // // print(context.read());
-            // print(state);
-            // print("**********7887878***********");
-
             if (state is MovieLoading) {
-              print("**********loading***********");
               return buildLoading();
             } else if (state is MovieLoaded) {
               print("**********---loaded----***********");
-              print(state.movies.length.toString());
+              print(state.movies.length);
               print("**********---loaded----***********");
-              return buildMovieLoaded(state.movies);
+              return state.movies != null
+                  ? buildMovieList(state.movies, context)
+                  : Text(
+                      "Please Check your internet Coonection.",
+                      style: TextStyle(color: Colors.red, fontSize: 24.0),
+                      textAlign: TextAlign.center,
+                    );
             } else {
               // (state is WeatherError)
               return buildLoadingError();
@@ -59,15 +61,146 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildMovieLoaded(List<Movie> movie) {
+  Widget buildMovieList(List<AllMovieModel> movieList, context) {
+    // return GridView.builder(
+    //   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+    //       maxCrossAxisExtent: 200,
+    //       childAspectRatio: 1,
+    //       crossAxisSpacing: 10,
+    //       mainAxisSpacing: 0),
+    //   itemCount: movieList.length,
+    //   itemBuilder: (BuildContext context, int index) {
+    //     return Container(
+    //       alignment: Alignment.center,
+    //       child: Image.network(
+    //         ApiConstants.BASE_IMAGE_URL + movieList[index].posterPath,
+    //       ),
+    //     );
+    //   },
+    //   // ),
+    // );
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.all(10),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200.0,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
+              childAspectRatio: 0.55,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Container(
+                  alignment: Alignment.center,
+                  // color: Colors.black12,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.network(
+                        ApiConstants.BASE_IMAGE_URL +
+                            movieList[index].posterPath,
+                        // width: 300,
+                        // height: 300,
+                      ),
+                      Center(
+                        child: Text(movieList[index].title,
+                            style: TextStyle(fontSize: 18.0),
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                      // Text(movieList[index].voteCount.toString()),
+                      // Text(movieList[index].title),
+                      // Text(movieList[index].title),
+                      // Text(movieList[index].title),
+                      // Text(movieList[index].mediaType),
+                    ],
+                  ),
+                );
+              },
+              childCount: movieList.length,
+            ),
+          ),
+        )
+      ],
+    );
+    //         // crossAxisSpacing: 10,
+    //         // mainAxisSpacing: 10,
+    //         // crossAxisCount: 2,
+    //         // children: <Widget>[
+    //         // ListView.builder(
+    //         //   itemCount: movieList.length,
+    //         //   itemBuilder: (context, index) {
+    //         //     return Container(
+    //         //       height: 50,
+    //         //       color: Colors.grey[(index * 200) % 400],
+    //         //       child: Center(
+    //         //         child: Text(
+    //         //           movieList[index].title,
+    //         //           style: TextStyle(fontSize: 20),
+    //         //         ),
+    //         //       ),
+    //         //     );
+    //         //   },
+    //         // ),
+    //         // Container(
+    //         //   padding: const EdgeInsets.all(8),
+    //         //   child: const Text("movieList"),
+    //         //   color: Colors.green[100],
+    //         // ),
+    //         // ],
+  }
+
+//     child: ListView(
+//       children: schedules.map((schedule) {
+//         return Card(
+//           child: ListTile(
+//             leading: Text(schedule.busName, style: TextStyle(fontSize: 20)),
+//             title: Text(schedule.departureDestination +
+//                 " - " +
+//                 schedule.arrivalDestination),
+//             subtitle: Text('Price ${schedule.ticketPrice} birr'),
+//             onTap: () {},
+//           ),
+//         );
+//       }).toList(),
+//     ),
+//   );
+// }
+
+  // ListView.builder(
+  //   itemCount: schedules.length,
+  //   itemBuilder: (context, index) {
+  //     return Container(
+  //       height: 50,
+  //       color: Colors.grey[(index * 200) % 400],
+  //       child: Center(
+  //         child: Text(
+  //           schedules[index].busName,
+  //           style: TextStyle(fontSize: 20),
+  //         ),
+  //       ),
+  //     );
+  //   },
+  // )
+
+  Widget buildLoadingEmpty() {
     return Center(
-      child: Text("movie.toString()"),
+      child: Text("empty...."),
     );
   }
 
   Widget buildLoadingError() {
     return Center(
       child: Text("error...."),
+    );
+  }
+
+  Widget buildLoadedData() {
+    return Center(
+      child: Text("data...."),
     );
   }
 }

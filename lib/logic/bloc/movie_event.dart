@@ -10,7 +10,7 @@ abstract class MovieEvent extends Equatable {
 class LoadMovies extends MovieEvent {}
 
 class UpdateMovies extends MovieEvent {
-  final List<Movie> movies;
+  final List<AllMovieModel> movies;
 
   const UpdateMovies(this.movies);
 }

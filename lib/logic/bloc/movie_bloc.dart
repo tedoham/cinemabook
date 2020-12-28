@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cinemabook/data/model/all_movie_model.dart';
 import 'package:cinemabook/data/model/movie_model.dart';
 import 'package:cinemabook/data/repository/movie_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import '../../get_it.dart' as getIt;
 
 part 'movie_event.dart';
@@ -31,11 +31,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     try {
       MovieRepository repositoryInstance = getIt.getItInstance();
       final moviesList = await repositoryInstance.getMovies();
-      // final moviesList = await this.movieRepository.getMovies();
-
-      print("kjfksljflksjf----------------sdfsdfsdfsdfsdf");
-      print(moviesList.toList());
-      print("kjfksljflksjf----------------sdfsdfsdfsdfsdf");
       yield MovieLoaded(moviesList);
     } catch (_) {
       yield MovieError("error");
@@ -43,9 +38,6 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   }
 
   Stream<MovieState> _mapMoviesUpdateToState(UpdateMovies event) async* {
-    print("------44-4-4-4-4-4-4-----------");
-    print(event);
-    print("------44-4-4-4-4-4-4-----------");
     yield MovieLoaded(event.movies);
   }
 }

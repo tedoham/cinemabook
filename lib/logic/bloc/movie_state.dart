@@ -19,8 +19,8 @@ class MovieLoading extends MovieState {
 }
 
 class MovieLoaded extends MovieState {
-  final List<Movie> movies;
-  const MovieLoaded(this.movies);
+  final List<AllMovieModel> movies;
+  const MovieLoaded([this.movies = const []]);
 
   @override
   String toString() => 'MoviesLoaded { todos: $movies }';

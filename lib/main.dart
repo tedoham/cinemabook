@@ -28,9 +28,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // MovieRepository movieRepository = getIt.getItInstance();
-  MovieRepository movieRepository2; // = getIt.getItInstance();
-  // final hh = movieRepository.getMovies();
+  MovieRepository movieRepository; // = getIt.getItInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +41,7 @@ class _MyAppState extends State<MyApp> {
       ),
       // home: Text("dfdfdf"),
       home: BlocProvider(
-        create: (context) => MovieBloc(movieRepository2)..add(LoadMovies()),
+        create: (context) => MovieBloc(movieRepository)..add(LoadMovies()),
         child: HomeScreen(),
       ),
     );

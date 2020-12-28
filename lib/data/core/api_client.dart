@@ -16,7 +16,9 @@ class ApiClient {
         'Content-Type': 'application/json',
       },
     );
-
+    print("0000-------45---------0000");
+    print(response.request);
+    print("0000-------45---------0000");
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
