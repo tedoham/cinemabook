@@ -1,4 +1,6 @@
-class Movie {
+import 'package:equatable/equatable.dart';
+
+class Movie extends Equatable {
   List<int> genreIds;
   String originalLanguage;
   String originalTitle;
@@ -69,4 +71,24 @@ class Movie {
     data['media_type'] = this.mediaType;
     return data;
   }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [
+        genreIds,
+        originalLanguage,
+        originalTitle,
+        posterPath,
+        video,
+        voteAverage,
+        voteCount,
+        overview,
+        releaseDate,
+        id,
+        title,
+        adult,
+        backdropPath,
+        popularity,
+        mediaType
+      ];
 }
