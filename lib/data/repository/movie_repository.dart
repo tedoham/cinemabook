@@ -9,6 +9,7 @@ abstract class MovieRemoteDataSource {
   /// Throws [NetworkException].
   // Future<List<Movie>> getMovies();
   Future<List<AllMovieModel>> getMovies();
+  // Future<AllMovieModel> getMovieDetail();
 }
 
 class MovieRepository extends MovieRemoteDataSource {
@@ -26,13 +27,18 @@ class MovieRepository extends MovieRemoteDataSource {
     // final response = await _client.get('movie/now_playing');
     // final response = await _client.get('movie/464052');
     print(response.toString());
-    // print("======5645======");
-    // final movies = MoviesResultModel.fromJson(response).movies;
+
     final movies = AllMoviesResultModel.fromJson(response).movies; //.movies;
-    // final movies = AllMovieModel.fromJson(response); //.movies;
-    // print(movies);
-    // print("---------56------");
+
     return movies;
     // return null;
   }
+
+  // @override
+  // Future<AllMovieModel> getMovieDetail() async {
+  //   final response = await _client.get('movie/464052');
+  //   final movies = AllMoviesResultModel.fromJson(response); //.movies;
+
+  //   return movies;
+  // }
 }

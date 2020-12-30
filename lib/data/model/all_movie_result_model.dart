@@ -10,7 +10,7 @@ class AllMoviesResultModel {
     print("---------rrrr-----rrrrr---------");
     print(json.keys);
     print("---------rrrr-----rrrrr---------");
-    if (json['results'] != null) {
+    if (json['results'] != null || json['adult'] != null) {
       movies = new List<AllMovieModel>();
       json['results'].forEach((v) {
         movies.add(new AllMovieModel.fromJson(v));
