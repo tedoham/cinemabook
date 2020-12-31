@@ -31,10 +31,10 @@ class _SeatSelectorState extends State<SeatSelector> {
     var _chairStatus = [
       [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
-      [2, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2],
+      [1, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2],
       [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
       [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
-      [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
+      [2, 2, 2, 1, 2, 3, 2, 2, 2, 2, 2],
       [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3],
@@ -65,10 +65,10 @@ class _SeatSelectorState extends State<SeatSelector> {
                                 height: size.width / 11 - 10,
                                 margin: EdgeInsets.all(4),
                                 child: _chairStatus[i][x - 1] == 1
-                                    ? BuildChairs.availableChair()
+                                    ? selectedChair("1")
                                     : _chairStatus[i][x - 1] == 2
-                                        ? BuildChairs.selectedChair()
-                                        : BuildChairs.reservedChair(),
+                                        ? selectedChair("2")
+                                        : selectedChair("3"),
                               ),
                       ),
                   ],
@@ -79,6 +79,30 @@ class _SeatSelectorState extends State<SeatSelector> {
       ),
     );
   }
+
+  Widget selectedChair(flag) {
+    return InkWell(
+      child: Container(
+        height: 10.0,
+        width: 10.0,
+        decoration: flag == "1"
+            ? BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(6.0))
+            : BoxDecoration(
+                color: flag == "2" ? kPrimaryColor : kTextColor,
+                borderRadius: BorderRadius.circular(6.0),
+              ),
+      ),
+      onTap: () {
+        if (flag == "3") {
+          print("You can't change them..");
+        } else {
+          print("Tapped a Container-------" + flag);
+        }
+      },
+    );
+  }
 }
 
 class Seat {
@@ -87,32 +111,28 @@ class Seat {
   Seat({this.isAvailable});
 }
 
-class BuildChairs {
-  static Widget selectedChair() {
-    return Container(
-      height: 10.0,
-      width: 10.0,
-      decoration: BoxDecoration(
-          color: kPrimaryColor, borderRadius: BorderRadius.circular(6.0)),
-    );
-  }
+// class BuildChairs {
+//   // 1 is free seats - gey
+//   // 2 is selected seats - kPrimaryColor
+//   // 3 is reserved seats - kTextDarkColor
+//   static
 
-  static Widget availableChair() {
-    return Container(
-      height: 10.0,
-      width: 10.0,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(6.0)),
-    );
-  }
+// static Widget availableChair() {
+//   return Container(
+//     height: 10.0,
+//     width: 10.0,
+//     decoration: BoxDecoration(
+//         border: Border.all(color: Colors.grey),
+//         borderRadius: BorderRadius.circular(6.0)),
+//   );
+// }
 
-  static Widget reservedChair() {
-    return Container(
-      height: 10.0,
-      width: 10.0,
-      decoration: BoxDecoration(
-          color: kTextDarkColor, borderRadius: BorderRadius.circular(6.0)),
-    );
-  }
-}
+// static Widget reservedChair() {
+//   return Container(
+//     height: 10.0,
+//     width: 10.0,
+//     decoration: BoxDecoration(
+//         color: kTextDarkColor, borderRadius: BorderRadius.circular(6.0)),
+//   );
+// }
+// }
