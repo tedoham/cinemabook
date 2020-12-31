@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker_saver/image_picker_saver.dart';
 
 import '../../main.dart';
-import 'movie_home_screen.dart';
 
 class CinemaTicketScreen extends StatefulWidget {
   @override
@@ -28,7 +27,7 @@ class _CinemaTicketScreenState extends State<CinemaTicketScreen> {
       behavior: SnackBarBehavior.fixed,
       duration: const Duration(seconds: 10),
       action: SnackBarAction(
-          label: 'back to HOME',
+          label: 'HOME',
           textColor: Colors.white,
           onPressed: () {
             Navigator.push(

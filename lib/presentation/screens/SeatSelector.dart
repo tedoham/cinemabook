@@ -29,7 +29,7 @@ class _SeatSelectorState extends State<SeatSelector> {
     // 2 is selected seats
     // 3 is reserved seats
     var _chairStatus = [
-      [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+      [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2],
       [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
       [1, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2],
       [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
@@ -110,29 +110,3 @@ class Seat {
 
   Seat({this.isAvailable});
 }
-
-// class BuildChairs {
-//   // 1 is free seats - gey
-//   // 2 is selected seats - kPrimaryColor
-//   // 3 is reserved seats - kTextDarkColor
-//   static
-
-// static Widget availableChair() {
-//   return Container(
-//     height: 10.0,
-//     width: 10.0,
-//     decoration: BoxDecoration(
-//         border: Border.all(color: Colors.grey),
-//         borderRadius: BorderRadius.circular(6.0)),
-//   );
-// }
-
-// static Widget reservedChair() {
-//   return Container(
-//     height: 10.0,
-//     width: 10.0,
-//     decoration: BoxDecoration(
-//         color: kTextDarkColor, borderRadius: BorderRadius.circular(6.0)),
-//   );
-// }
-// }

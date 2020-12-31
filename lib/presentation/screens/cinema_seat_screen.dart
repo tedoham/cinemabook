@@ -111,10 +111,10 @@ class _CinemaSeatScreenState extends State<CinemaSeatScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("TICKET QTY "),
+          Flexible(child: Text("TICKET QTY ")),
           _ticketQty("1"),
           Container(height: 35, child: VerticalDivider(color: Colors.grey)),
-          Text("TOTAL PAYABLE: "),
+          Flexible(child: Text("TOTAL PAYABLE: ")),
           Text(
             "75 Br",
             style: TextStyle(color: Colors.black, fontSize: 30),

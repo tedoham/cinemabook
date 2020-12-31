@@ -78,12 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   // color: Colors.black12,
                   child: InkWell(
                     onTap: () {
-                      print("----3----4-5-5-6-7--8-9--------------->>>>>>>>");
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => MovieDetailScreen(
-                                movieDetail: movieList[index])),
+                                movieDetailId: movieList[index].id)),
                       );
                     },
                     child: Column(
@@ -124,12 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildLoadingError() {
     return Center(
       child: Text("error...."),
-    );
-  }
-
-  Widget buildLoadedData() {
-    return Center(
-      child: Text("data...."),
     );
   }
 }

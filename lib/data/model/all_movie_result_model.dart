@@ -16,13 +16,6 @@ class AllMoviesResultModel {
         movies.add(new AllMovieModel.fromJson(v));
       });
     }
-    //|| json['adult'] != null
-    // else {
-    //   movieDetail = new AllMovieModel();
-    //   json['adult'] {
-
-    //   }
-    // }
   }
 
   Map<String, dynamic> toJson() {
