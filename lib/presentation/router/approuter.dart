@@ -1,4 +1,4 @@
-import 'package:cinemabook/presentation/screens/screens.dart';
+import 'package:cinemabook/presentation/screens/movie_home_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {

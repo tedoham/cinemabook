@@ -1,13 +1,10 @@
-// import 'package:cinemabook/data/core/api_client.dart';
-import 'package:cinemabook/data/model/movie_model.dart';
 import 'package:cinemabook/data/repository/movie_repository.dart';
 import 'package:cinemabook/logic/bloc/movie_bloc.dart';
 import 'package:cinemabook/presentation/constants.dart';
-// import 'package:cinemabook/presentation/cubit/movie_cubit.dart';
-import 'package:cinemabook/presentation/screens/screens.dart';
+import 'package:cinemabook/presentation/screens/movie_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:http/http.dart';
+
 import 'package:pedantic/pedantic.dart';
 import 'get_it.dart' as getIt;
 

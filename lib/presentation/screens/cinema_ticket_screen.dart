@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -8,11 +6,12 @@ import 'package:cinemabook/presentation/widgets/Button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker_saver/image_picker_saver.dart';
+
+import '../../main.dart';
+import 'movie_home_screen.dart';
 
 class CinemaTicketScreen extends StatefulWidget {
   @override
@@ -20,65 +19,56 @@ class CinemaTicketScreen extends StatefulWidget {
 }
 
 class _CinemaTicketScreenState extends State<CinemaTicketScreen> {
-  GlobalKey globalKey = new GlobalKey();
+  GlobalKey _globalKey = new GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  Future<void> _captureAndSharePng() async {
+  void _showScaffold(String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+      behavior: SnackBarBehavior.fixed,
+      duration: const Duration(seconds: 10),
+      action: SnackBarAction(
+          label: 'back to HOME',
+          textColor: Colors.white,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          }),
+    ));
+  }
+
+  Future<void> _capturePng() async {
     try {
       RenderRepaintBoundary boundary =
-          globalKey.currentContext.findRenderObject();
+          _globalKey.currentContext.findRenderObject();
       ui.Image image = await boundary.toImage();
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData.buffer.asUint8List();
 
-      // var bs64 = base64Encode(pngBytes);
+      //Request permissions if not already granted
+      if (!(await Permission.storage.status.isGranted))
+        await Permission.storage.request();
 
-      final path = await getApplicationDocumentsDirectory();
+      var filePath = await ImagePickerSaver.saveFile(fileData: pngBytes);
 
-      // final tempDir = await getTemporaryDirectory();
-      // final file = await new File('${tempDir.path}/image.png').create();
-      // await file.writeAsBytes(pngBytes);
-      //   var filePath = await ImagePickerSaver.saveFile(
-      //     fileData:byteData.buffer.asUint8List() );
-      // print(filePath);
+      if (filePath != null) {
+        _showScaffold("You ticket saved to your photo gallery.");
+      }
 
-      print("----33----2222-----999");
-      print(image);
-      // print(tempDir);
-      print(byteData);
-      // print(file);
-      // print(bs64.length.toString());
-      print("----33----2222-----999");
-
-      return pngBytes;
-
-      // final channel = const MethodChannel('channel:me.alfian.share/share');
-      // channel.invokeMethod('shareFile', 'image.png');
+      print(pngBytes);
+      print(filePath);
     } catch (e) {
       print(e.toString());
     }
   }
 
-  Future<void> _capturePng() async {
-    RenderRepaintBoundary boundary =
-        globalKey.currentContext.findRenderObject();
-    ui.Image image = await boundary.toImage();
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List pngBytes = byteData.buffer.asUint8List();
-
-    //Request permissions if not already granted
-    if (!(await Permission.storage.status.isGranted))
-      await Permission.storage.request();
-
-    var filePath = await ImagePickerSaver.saveFile(fileData: pngBytes);
-
-    print(pngBytes);
-    print(filePath);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
@@ -92,7 +82,7 @@ class _CinemaTicketScreenState extends State<CinemaTicketScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             RepaintBoundary(
-              key: globalKey,
+              key: _globalKey,
               child: Container(
                 color: Colors.white,
                 child: Column(
@@ -197,16 +187,7 @@ class _CinemaTicketScreenState extends State<CinemaTicketScreen> {
             LargeButton(
                 label: "Save your ticket as image",
                 iconData: Icons.arrow_forward,
-                onTap: _capturePng
-                // () {
-                //   print("----44444440000000000000--------------->>>>>>>>");
-
-                //   // Navigator.push(
-                //   //   context,
-                //   //   MaterialPageRoute(builder: (context) => CinemaTicketScreen()),
-                //   // );
-                // },
-                ),
+                onTap: _capturePng),
           ],
         ),
       ),
