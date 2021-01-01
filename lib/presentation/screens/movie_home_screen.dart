@@ -33,9 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is MovieLoading) {
               return buildLoading();
             } else if (state is MovieLoaded) {
-              print("**********---loaded----***********");
-              print(state.movies.length);
-              print("**********---loaded----***********");
               return state.movies != null
                   ? buildMovieList(state.movies, context)
                   : Text(
@@ -81,8 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => MovieDetailScreen(
-                                movieDetailId: movieList[index].id)),
+                          builder: (context) => MovieDetailScreen(
+                              movieDetailId: movieList[index].id),
+                        ),
                       );
                     },
                     child: Column(
@@ -93,8 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Image.network(
                           ApiConstants.BASE_IMAGE_URL +
                               movieList[index].posterPath,
-                          // width: 300,
-                          // height: 300,
                         ),
                         Center(
                           child: Text(movieList[index].title,
@@ -114,15 +110,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildLoadingEmpty() {
-    return Center(
-      child: Text("empty...."),
-    );
-  }
-
   Widget buildLoadingError() {
     return Center(
-      child: Text("error...."),
+      child: Text(
+        "Please Check your internet Coonection.",
+        style: TextStyle(color: Colors.red, fontSize: 24.0),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }

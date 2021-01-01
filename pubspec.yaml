@@ -62,6 +62,7 @@ flutter:
   assets:
     - schedules.xml
     - schedules.json
+    - cinemaSeatStatus.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

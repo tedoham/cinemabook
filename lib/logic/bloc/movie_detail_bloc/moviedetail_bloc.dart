@@ -18,18 +18,12 @@ class MoviedetailBloc extends Bloc<MoviedetailEvent, MoviedetailState> {
   Stream<MoviedetailState> mapEventToState(
     MoviedetailEvent event,
   ) async* {
-    print("----------hhhhhhhh--------------");
-    print(event);
-    print("----------hhhhhhhh--------------");
     if (event is LoadMovieDetail) {
       yield* _mapLoadDetailMoviesToState(event.movieId);
     }
   }
 
   Stream<MoviedetailState> _mapLoadDetailMoviesToState(int id) async* {
-    print("----------hhhhhhhh22--------------");
-    print(id);
-    print("----------hhhhhhhh22--------------");
     try {
       MovieRepository repositoryInstance = getIt.getItInstance();
       final movieDetail = await repositoryInstance.getMovieDetail(id);

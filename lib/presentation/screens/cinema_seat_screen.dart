@@ -1,4 +1,4 @@
-import 'package:cinemabook/data/model/all_movie_model.dart';
+import 'package:cinemabook/data/model/movie_detail_model.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:cinemabook/presentation/screens/SeatSelector.dart';
 import 'package:cinemabook/presentation/screens/cinema_ticket_screen.dart';
@@ -6,7 +6,7 @@ import 'package:cinemabook/presentation/widgets/Button.dart';
 import 'package:flutter/material.dart';
 
 class CinemaSeatScreen extends StatefulWidget {
-  final AllMovieModel movieInfo;
+  final MovieDetailModel movieInfo;
 
   const CinemaSeatScreen({Key key, this.movieInfo}) : super(key: key);
 
@@ -32,15 +32,11 @@ class _CinemaSeatScreenState extends State<CinemaSeatScreen> {
             SizedBox(height: 10),
             _headMovieInfo(),
             SizedBox(height: 20),
-            // TicketPage()
-            // FlightTicketApp()
-            // Container(
-            //   color: Colors.grey,
-            SizedBox(height: 5),
+
             Divider(color: Colors.grey[500]),
-            // SizedBox(height: 5),
+
             _cinemaHallInfo(context),
-            SeatSelector(),
+            SeatSelector(widget.movieInfo.id.toString()),
 
             SizedBox(height: 20),
 
@@ -54,10 +50,11 @@ class _CinemaSeatScreenState extends State<CinemaSeatScreen> {
               label: "Confirm your purchase",
               iconData: Icons.arrow_forward,
               onTap: () {
-                print("----44444440000000000000--------------->>>>>>>>");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CinemaTicketScreen()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CinemaTicketScreen(movieInfo: widget.movieInfo)),
                 );
               },
             ),
@@ -71,7 +68,6 @@ class _CinemaSeatScreenState extends State<CinemaSeatScreen> {
 
   Container _cinemaHallInfo(BuildContext context) {
     return Container(
-      // color: Colors.grey[300],
       width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -159,7 +155,7 @@ class _CinemaSeatScreenState extends State<CinemaSeatScreen> {
     );
   }
 
-  Padding _seatInfo() {
+  Widget _seatInfo() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -228,6 +224,12 @@ class _CinemaSeatScreenState extends State<CinemaSeatScreen> {
             value: "2",
             child: Text(
               "2",
+            ),
+          ),
+          DropdownMenuItem(
+            value: "3",
+            child: Text(
+              "3",
             ),
           ),
         ],

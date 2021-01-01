@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:cinemabook/data/model/all_movie_model.dart';
+import 'package:cinemabook/data/model/movie_detail_model.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:cinemabook/presentation/widgets/Button.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,10 @@ import 'package:image_picker_saver/image_picker_saver.dart';
 import '../../main.dart';
 
 class CinemaTicketScreen extends StatefulWidget {
+  final MovieDetailModel movieInfo;
+
+  const CinemaTicketScreen({Key key, this.movieInfo}) : super(key: key);
+
   @override
   _CinemaTicketScreenState createState() => _CinemaTicketScreenState();
 }
@@ -88,7 +94,7 @@ class _CinemaTicketScreenState extends State<CinemaTicketScreen> {
                   children: [
                     SizedBox(height: 20.0),
                     Text(
-                      "Movie Title",
+                      widget.movieInfo.title,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 30.0,

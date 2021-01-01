@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cinemabook/data/model/all_movie_model.dart';
-import 'package:cinemabook/data/model/movie_model.dart';
+
 import 'package:cinemabook/data/repository/movie_repository.dart';
 import 'package:equatable/equatable.dart';
 import '../../get_it.dart' as getIt;

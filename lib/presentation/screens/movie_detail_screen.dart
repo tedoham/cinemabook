@@ -1,6 +1,5 @@
 import 'package:cinemabook/data/core/api_constants.dart';
 import 'package:cinemabook/data/model/all_movie_model.dart';
-import 'package:cinemabook/get_it.dart';
 import 'package:cinemabook/logic/bloc/movie_detail_bloc/moviedetail_bloc.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:cinemabook/presentation/screens/cinema_seat_screen.dart';
@@ -22,26 +21,14 @@ class MovieDetailScreen extends StatefulWidget {
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
   MoviedetailBloc _movieDetailBloc;
-  // @override
-  void initState() {
-    // print("----init----" + widget.movieDetailId.toString());
-    _movieDetailBloc = BlocProvider.of<MoviedetailBloc>(context);
-    _movieDetailBloc.add(LoadMovieDetail(widget.movieDetailId));
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _movieDetailBloc?.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    var now = DateTime.now();
-    DateTime startDate = now;
-    DateTime endDate = now.add(Duration(days: 14));
+    // List<Genres> genreList = new List<Genres>();
+
+    _movieDetailBloc = BlocProvider.of<MoviedetailBloc>(context);
+    _movieDetailBloc
+        .add(LoadMovieDetail(int.parse(widget.movieDetailId.toString())));
 
     return Scaffold(
       appBar: AppBar(
@@ -53,13 +40,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       body: BlocBuilder<MoviedetailBloc, MoviedetailState>(
         builder: (context, state) {
           if (state is MovieDetailLoading) {
-            
             return buildLoading();
           } else if (state is MovieDetailLoaded) {
-            
             return state.movie != null
-                ? _movieDetailWidget(
-                    context, startDate, endDate, now, state.movie)
+                ? _movieDetailWidget(context, state.movie)
                 : Text(
                     "Please Check your internet Coonection.",
                     style: TextStyle(color: Colors.red, fontSize: 24.0),
@@ -88,12 +72,20 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildLoadingError() {
     return Center(
-      child: Text("error...."),
+      child: Text(
+        "Please Check your internet Coonection.",
+        style: TextStyle(color: Colors.red, fontSize: 24.0),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
-  Widget _movieDetailWidget(BuildContext context, DateTime startDate,
-      DateTime endDate, DateTime now, movie) {
+  Widget _movieDetailWidget(BuildContext context, movie) {
+    //List<Map> details = this.details != null ? this.details.map((i)=> i.toJson()).toList() : null;
+    var now = DateTime.now();
+    DateTime startDate = now;
+    DateTime endDate = now.add(Duration(days: 14));
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,7 +122,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                   SizedBox(width: 5),
                   Text(
-                    "4.9",
+                    movie.voteAverage.toString(),
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                 ],
@@ -143,7 +135,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                   SizedBox(width: 5),
                   Text(
-                    "111 mins",
+                    movie.runtime.toString(),
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                 ],
@@ -324,23 +316,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     ],
                   ),
                 ),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     SmallButton(
-                //       label: "Continue to seat selector",
-                //       onTap: () {
-                //         print("----7d7d7d7d7d7d7--------------->>>>>>>>");
-                //         // Navigator.push(
-                //         //   context,
-                //         //   MaterialPageRoute(
-                //         //       builder: (context) => MovieDetailScreen()),
-                //         // );
-                //       },
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -349,13 +324,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             label: "Continue to seat selector",
             iconData: Icons.arrow_forward,
             onTap: () {
-              print("----44444440000000000000--------------->>>>>>>>");
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) =>
-              //           CinemaSeatScreen("movieInfo: widget.movieDetail")),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CinemaSeatScreen(movieInfo: movie),
+                ),
+              );
+              // Navigator.pop(context, () {
+              //   setState(() {});
+              // });
             },
           ),
         ],

@@ -1,44 +1,47 @@
+import 'package:cinemabook/data/repository/movie_repository.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../../get_it.dart' as getIt;
 
 class SeatSelector extends StatefulWidget {
+  final String movieID;
+  const SeatSelector(this.movieID, {Key key}) : super(key: key);
+
   @override
   _SeatSelectorState createState() => _SeatSelectorState();
 }
 
 class _SeatSelectorState extends State<SeatSelector> {
-  List<Seat> _item;
-  int _row = 9;
-  int _column = 11;
-  List<List<Seat>> _tmp;
+  //row=9
+  //column=11
+  // 1 is free seats
+  // 2 is selected seats
+  // 3 is reserved seats
+  var _chairStatus = [
+    [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
+    [1, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2],
+    [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 1, 2, 3, 2, 2, 2, 2, 2],
+    [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3],
+  ];
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return _chairList();
   }
 
   Widget _chairList() {
+    Future<void> changeRawData() async {
+      final _chairStatus2 = await getSeatdata();
+    }
+
+    changeRawData();
     Size size = MediaQuery.of(context).size;
 
-    //row=9
-    //column=11
-    // 1 is free seats
-    // 2 is selected seats
-    // 3 is reserved seats
-    var _chairStatus = [
-      [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2],
-      [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
-      [1, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2],
-      [2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
-      [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
-      [2, 2, 2, 1, 2, 3, 2, 2, 2, 2, 2],
-      [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
-      [2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
-      [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3],
-    ];
     var _chairLetters = ['I', 'H', 'G', 'F', 'E', 'D', 'C', 'B', 'A'];
 
     return Padding(
@@ -53,22 +56,18 @@ class _SeatSelectorState extends State<SeatSelector> {
                 padding: const EdgeInsets.all(4.0),
                 child: Row(
                   children: [
-                    for (int x = 0; x < 11; x++) //BuildChairs.reservedChair(),
-                      // Text("*" + " __ " + x.toString() + "#")
+                    for (int x = 0; x < 11; x++)
                       Expanded(
-                        // child: BuildChairs.selectedChair(),
-                        // flex: 1,
-                        // child: BuildChairs.reservedChair(),
                         child: x == 0
                             ? Text(_chairLetters[i])
                             : Container(
                                 height: size.width / 11 - 10,
-                                margin: EdgeInsets.all(4),
+                                margin: EdgeInsets.all(3),
                                 child: _chairStatus[i][x - 1] == 1
-                                    ? selectedChair("1")
+                                    ? selectedChair("1", i, x)
                                     : _chairStatus[i][x - 1] == 2
-                                        ? selectedChair("2")
-                                        : selectedChair("3"),
+                                        ? selectedChair("2", i, x)
+                                        : selectedChair("3", i, x),
                               ),
                       ),
                   ],
@@ -80,8 +79,16 @@ class _SeatSelectorState extends State<SeatSelector> {
     );
   }
 
-  Widget selectedChair(flag) {
-    return InkWell(
+  getSeatdata() async {
+    //widget.movieID.toString()
+    MovieRepository repositoryInstance = getIt.getItInstance();
+    final movieXml = await repositoryInstance.getMovieDataFromXML("508442");
+
+    return movieXml;
+  }
+
+  Widget selectedChair(String flag, int i, int x) {
+    return GestureDetector(
       child: Container(
         height: 10.0,
         width: 10.0,
@@ -98,15 +105,16 @@ class _SeatSelectorState extends State<SeatSelector> {
         if (flag == "3") {
           print("You can't change them..");
         } else {
-          print("Tapped a Container-------" + flag);
+          print("Tapped a Container-------" +
+              _chairStatus[i][x].toString() +
+              "---" +
+              i.toString() +
+              "---" +
+              x.toString());
+          _chairStatus[i][x] = _chairStatus[i][x] == 1 ? 2 : 1;
+          setState(() {});
         }
       },
     );
   }
-}
-
-class Seat {
-  final bool isAvailable;
-
-  Seat({this.isAvailable});
 }

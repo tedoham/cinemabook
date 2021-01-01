@@ -11,7 +11,6 @@ import 'get_it.dart' as getIt;
 import 'logic/bloc/movie_detail_bloc/moviedetail_bloc.dart';
 
 void main() {
-  // getIt.init();
   unawaited(getIt.init());
   // final ApiClient _client = ApiClient(Client());
   // MovieRepository movieRepository = getIt.getItInstance();
@@ -27,7 +26,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  MovieRepository movieRepository; // = getIt.getItInstance();
+  MovieRepository movieRepository;
 
   @override
   Widget build(BuildContext context) {
