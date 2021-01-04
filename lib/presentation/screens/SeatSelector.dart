@@ -1,7 +1,5 @@
-import 'package:cinemabook/data/repository/movie_repository.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:flutter/material.dart';
-import '../../get_it.dart' as getIt;
 
 class SeatSelector extends StatefulWidget {
   final String movieID;
@@ -81,10 +79,10 @@ class _SeatSelectorState extends State<SeatSelector> {
 
   getSeatdata() async {
     //widget.movieID.toString()
-    MovieRepository repositoryInstance = getIt.getItInstance();
-    final movieXml = await repositoryInstance.getMovieDataFromXML("508442");
+    // MovieRepository repositoryInstance = getIt.getItInstance();
+    // final movieXml = await repositoryInstance.getMovieDataFromXML("508442");
 
-    return movieXml;
+    // return movieXml;
   }
 
   Widget selectedChair(String flag, int i, int x) {

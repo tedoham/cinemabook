@@ -1,8 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:cinemabook/data/model/all_movie_model.dart';
-import 'package:cinemabook/data/model/movie_detail_model.dart';
+import 'package:cinemabook/data/model/movie_detail.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:cinemabook/presentation/widgets/Button.dart';
 import 'package:flutter/material.dart';

@@ -1,12 +1,15 @@
+import 'package:cinemabook/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:cinemabook/data/core/api_constants.dart';
-import 'package:cinemabook/data/model/all_movie_model.dart';
-import 'package:cinemabook/logic/bloc/movie_detail_bloc/moviedetail_bloc.dart';
+import 'package:cinemabook/data/model/movie_detail.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:cinemabook/presentation/screens/cinema_seat_screen.dart';
 import 'package:cinemabook/presentation/widgets/Button.dart';
 import 'package:cinemabook/presentation/widgets/OutlineButton.dart';
+import 'package:cinemabook/presentation/widgets/error.dart';
+import 'package:cinemabook/presentation/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:horizontal_center_date_picker/datepicker_controller.dart';
 import 'package:horizontal_center_date_picker/horizontal_date_picker.dart';
 
@@ -20,68 +23,55 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  MoviedetailBloc _movieDetailBloc;
+  @override
+  void initState() {
+    _loadMovies();
+    super.initState();
+  }
+
+  _loadMovies() {
+    context.read<MovieDetailBloc>().add(
+        FetchMovieDetail(movieId: int.parse(widget.movieDetailId.toString())));
+  }
 
   @override
   Widget build(BuildContext context) {
-    // List<Genres> genreList = new List<Genres>();
-
-    _movieDetailBloc = BlocProvider.of<MoviedetailBloc>(context);
-    _movieDetailBloc
-        .add(LoadMovieDetail(int.parse(widget.movieDetailId.toString())));
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: kPrimaryColor,
         elevation: 0.0,
-        title: Text('Movie Detail'),
+        title: Text(
+          'Movie Detail',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-      body: BlocBuilder<MoviedetailBloc, MoviedetailState>(
+      body: BlocBuilder<MovieDetailBloc, MovieDetailState>(
         builder: (context, state) {
-          if (state is MovieDetailLoading) {
-            return buildLoading();
-          } else if (state is MovieDetailLoaded) {
-            return state.movie != null
-                ? _movieDetailWidget(context, state.movie)
-                : Text(
-                    "Please Check your internet Coonection.",
-                    style: TextStyle(color: Colors.red, fontSize: 24.0),
-                    textAlign: TextAlign.center,
-                  );
-          } else {
-            // (state is WeatherError)
-            return buildLoadingError();
+          if (state is MovieListError) {
+            final error = state.error;
+            String message = '${error.message}\nTap to Retry.';
+            return ErrorTxt(
+              message: message,
+              onTap: _loadMovies,
+            );
           }
+
+          if (state is MovieListLoaded) {
+            MovieDetailModel movie = state.movie;
+            print("**************************************33333333333333333");
+            print(state.movie.title);
+            print("**************************************33333333333333333");
+
+            return _movieDetailWidget(movie);
+          }
+          return Loading();
         },
       ),
     );
   }
 
-  Widget buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget buildLoadingEmpty() {
-    return Center(
-      child: Text("empty...."),
-    );
-  }
-
-  Widget buildLoadingError() {
-    return Center(
-      child: Text(
-        "Please Check your internet Coonection.",
-        style: TextStyle(color: Colors.red, fontSize: 24.0),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget _movieDetailWidget(BuildContext context, movie) {
-    //List<Map> details = this.details != null ? this.details.map((i)=> i.toJson()).toList() : null;
+  _movieDetailWidget(movie) {
     var now = DateTime.now();
     DateTime startDate = now;
     DateTime endDate = now.add(Duration(days: 14));
@@ -161,39 +151,35 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Synopsis",
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Action"),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Drama"),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Drama"),
-                        ),
-                      ],
-                    ),
-                  ],
+                Text(
+                  "Synopsis",
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: movie.genres.map<Widget>((entry) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          " " + entry.name.toString() + " ",
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 20),
                 Container(
                   child: Text(movie.overview,
                       textAlign: TextAlign.left,

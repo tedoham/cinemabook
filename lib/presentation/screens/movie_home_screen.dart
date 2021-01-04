@@ -1,9 +1,10 @@
-import 'package:cinemabook/data/core/api_constants.dart';
-import 'package:cinemabook/data/model/all_movie_model.dart';
-import 'package:cinemabook/logic/bloc/movie_bloc.dart';
+import 'package:cinemabook/bloc/movie_list_bloc/movie_list_bloc.dart';
+import 'package:cinemabook/data/model/movies_list.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:cinemabook/presentation/screens/movie_detail_screen.dart';
-// import 'package:cinemabook/presentation/cubit/movie_cubit.dart';
+import 'package:cinemabook/presentation/widgets/error.dart';
+import 'package:cinemabook/presentation/widgets/loading.dart';
+import 'package:cinemabook/data/core/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,49 +15,54 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  Widget build(BuildContext context) {
-    // get screen width
-    // final Size screenSize = MediaQuery.of(context).size;
+  void initState() {
+    _loadMovies();
+    super.initState();
+  }
 
+  _loadMovies() {
+    context.read<MovieListBloc>().add(MovieListEvent.fetchMovies);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: kPrimaryColor,
         elevation: 0.0,
-        title: Text('Trending Movies'),
+        title: Text(
+          'Trending Movies',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
-        child: BlocBuilder<MovieBloc, MovieState>(
-          builder: (context, state) {
-            if (state is MovieLoading) {
-              return buildLoading();
-            } else if (state is MovieLoaded) {
-              return state.movies != null
-                  ? buildMovieList(state.movies, context)
-                  : Text(
-                      "Please Check your internet Coonection.",
-                      style: TextStyle(color: Colors.red, fontSize: 24.0),
-                      textAlign: TextAlign.center,
-                    );
-            } else {
-              // (state is WeatherError)
-              return buildLoadingError();
+        child: BlocBuilder<MovieListBloc, MovieListState>(
+          builder: (BuildContext context, MovieListState state) {
+            if (state is MovieListError) {
+              final error = state.error;
+              String message = '${error.message}\nTap to Retry.';
+              return ErrorTxt(
+                message: message,
+                onTap: _loadMovies,
+              );
             }
+            if (state is MovieListLoaded) {
+              List<Result> movies = state.movies;
+              return _buildMovieList(movies);
+              // return _list(movies);
+            }
+            return Loading();
           },
         ),
       ),
     );
   }
 
-  Widget buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget buildMovieList(List<AllMovieModel> movieList, context) {
+  _buildMovieList(movies) {
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -75,11 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   // color: Colors.black12,
                   child: InkWell(
                     onTap: () {
+                      print("detail info ----- for next screnn***" +
+                          movies[index].id.toString());
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => MovieDetailScreen(
-                              movieDetailId: movieList[index].id),
+                              movieDetailId: movies[index].id),
                         ),
                       );
                     },
@@ -90,10 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Image.network(
                           ApiConstants.BASE_IMAGE_URL +
-                              movieList[index].posterPath,
+                              movies[index].posterPath,
                         ),
                         Center(
-                          child: Text(movieList[index].title,
+                          child: Text(movies[index].title,
                               style: TextStyle(fontSize: 18.0),
                               overflow: TextOverflow.ellipsis),
                         ),
@@ -102,21 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-              childCount: movieList.length,
+              childCount: movies.length,
             ),
           ),
         )
       ],
-    );
-  }
-
-  Widget buildLoadingError() {
-    return Center(
-      child: Text(
-        "Please Check your internet Coonection.",
-        style: TextStyle(color: Colors.red, fontSize: 24.0),
-        textAlign: TextAlign.center,
-      ),
     );
   }
 }

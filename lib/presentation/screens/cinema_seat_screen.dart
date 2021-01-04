@@ -1,4 +1,4 @@
-import 'package:cinemabook/data/model/movie_detail_model.dart';
+import 'package:cinemabook/data/model/movie_detail.dart';
 import 'package:cinemabook/presentation/constants.dart';
 import 'package:cinemabook/presentation/screens/SeatSelector.dart';
 import 'package:cinemabook/presentation/screens/cinema_ticket_screen.dart';
